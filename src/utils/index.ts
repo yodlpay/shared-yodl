@@ -1,4 +1,4 @@
-import { CHAIN_SHORT_NAMES } from '@/constants';
+import { CHAIN_SHORT_NAMES } from 'src/constants';
 import { z } from 'zod';
 
 export const stringUtils = {

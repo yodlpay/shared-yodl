@@ -1,6 +1,4 @@
-import { convertPreferencesToText } from '@/validation/preferences.validation';
-
-import { PreferencesSchema } from '@/validation/preferences.validation';
+import { convertPreferencesToText, PreferencesSchema } from 'src/validation';
 
 const CONFIG = {
   tokens: ['USDC', 'USDT'],

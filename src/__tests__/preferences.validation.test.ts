@@ -1,4 +1,4 @@
-import { PreferencesSchema } from '../validation/preferences.validation';
+import { PreferencesSchema } from 'src/validation';
 
 describe('PreferencesSchema', () => {
   it('should validate preferences with tokens and chains', () => {
