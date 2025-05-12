@@ -1,6 +1,6 @@
-import { SUPPORTED_CHAINS } from 'src/constants';
-import { chainIdToShortName, resolveChainIdOrShortName, stringUtils } from 'src/utils';
 import { z } from 'zod';
+import { SUPPORTED_CHAINS } from '../constants';
+import { chainIdToShortName, resolveChainIdOrShortName, stringUtils } from '../utils';
 
 /**
  * Schema for validating token configurations.

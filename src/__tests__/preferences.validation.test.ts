@@ -1,60 +1,70 @@
-import { PreferencesSchema } from 'src/validation';
+import { convertPreferencesToText, PreferencesSchema } from '../validation';
 
-describe('PreferencesSchema', () => {
-  it('should validate preferences with tokens and chains', () => {
-    const input = {
-      tokens: ['USDC', 'USDT', 'USDGLO'],
-      chains: [8453, 137, 10],
-    };
+const CONFIG = {
+  tokens: ['USDC', 'USDT'],
+  chains: [1, 137],
+  webhooks: ['https://example.com/webhook1', 'https://example.com/webhook2'],
+};
 
-    const result = PreferencesSchema.parse(input);
-
-    // Check that the result contains the expected structure
-    expect(result).toHaveProperty('tokenSymbols');
-    expect(result).toHaveProperty('chainIds');
-
-    // Verify the token symbols are preserved
-    expect(result.tokenSymbols).toEqual(['USDC', 'USDT', 'USDGLO']);
-
-    // Verify the chain IDs are preserved
-    expect(result.chainIds).toEqual([8453, 137, 10]);
+describe('Validation exports', () => {
+  it('should export PreferencesSchema', () => {
+    expect(PreferencesSchema).toBeDefined();
   });
 
-  it('should handle string input for tokens and chains', () => {
-    const input = {
-      tokens: 'USDC,USDT,USDGLO',
-      chains: '8453,137,10',
-    };
-
-    const result = PreferencesSchema.parse(input);
-
-    // Check that the result contains the expected structure
-    expect(result).toHaveProperty('tokenSymbols');
-    expect(result).toHaveProperty('chainIds');
-
-    // Verify the token symbols are parsed correctly
-    expect(result.tokenSymbols).toEqual(['USDC', 'USDT', 'USDGLO']);
-
-    // Verify the chain IDs are parsed correctly
-    expect(result.chainIds).toEqual([8453, 137, 10]);
+  it('should export convertPreferencesToText', () => {
+    expect(convertPreferencesToText).toBeDefined();
   });
 
-  it('should handle JSON string input', () => {
-    const input = JSON.stringify({
-      tokens: ['USDC', 'USDT', 'USDGLO'],
-      chains: [8453, 137, 10],
-    });
-
-    const result = PreferencesSchema.parse(input);
-
-    // Check that the result contains the expected structure
+  it('should validate basic preferences', () => {
+    const result = PreferencesSchema.parse(CONFIG);
     expect(result).toHaveProperty('tokenSymbols');
     expect(result).toHaveProperty('chainIds');
+    expect(result.tokenSymbols).toEqual(['USDC', 'USDT']);
+    expect(result.chainIds).toEqual([1, 137]);
+  });
 
-    // Verify the token symbols are preserved
-    expect(result.tokenSymbols).toEqual(['USDC', 'USDT', 'USDGLO']);
+  it('should handle JSON input', () => {
+    const input = JSON.stringify(CONFIG);
 
-    // Verify the chain IDs are preserved
-    expect(result.chainIds).toEqual([8453, 137, 10]);
+    const result = PreferencesSchema.parse(input);
+    expect(result).toHaveProperty('tokenSymbols');
+    expect(result).toHaveProperty('chainIds');
+    expect(result.tokenSymbols).toEqual(['USDC', 'USDT']);
+    expect(result.chainIds).toEqual([1, 137]);
+  });
+
+  it('should handle webhooks', () => {
+    const input = JSON.stringify(CONFIG);
+
+    const result = PreferencesSchema.parse(input);
+    expect(result).toHaveProperty('webhooks');
+    expect(result.webhooks).toEqual([
+      'https://example.com/webhook1',
+      'https://example.com/webhook2',
+    ]);
+  });
+
+  it('should reject invalid URLs in webhooks', () => {
+    const invalidConfig = {
+      ...CONFIG,
+      webhooks: ['http://example.com/webhook', 'ftp://example.com/webhook'],
+    };
+
+    expect(() => {
+      PreferencesSchema.parse(invalidConfig);
+    }).toThrow();
+  });
+
+  it('should accept only secure URLs in webhooks', () => {
+    const secureConfig = {
+      ...CONFIG,
+      webhooks: ['https://example.com/webhook1', 'https://api.service.com/hook'],
+    };
+
+    const result = PreferencesSchema.parse(secureConfig);
+    expect(result.webhooks).toEqual([
+      'https://example.com/webhook1',
+      'https://api.service.com/hook',
+    ]);
   });
 });

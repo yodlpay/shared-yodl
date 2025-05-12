@@ -1,5 +1,5 @@
-import { CHAIN_SHORT_NAMES } from 'src/constants';
 import { z } from 'zod';
+import { CHAIN_SHORT_NAMES } from '../constants';
 
 export const stringUtils = {
   arrayToCommaString: (array: any[]) => array.join(','),
