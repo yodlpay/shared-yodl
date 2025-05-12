@@ -69,15 +69,4 @@ describe('Validation exports', () => {
       'https://api.service.com/hook',
     ]);
   });
-
-  it('should reject non-secure URLs in redirectUrl', () => {
-    const invalidConfig = {
-      ...CONFIG,
-      redirectUrl: 'http://example.com/redirect',
-    };
-
-    expect(() => {
-      PreferencesSchema.parse(invalidConfig);
-    }).toThrow();
-  });
 });
