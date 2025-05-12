@@ -10,10 +10,10 @@
     "forceConsistentCasingInFileNames": true,
     "baseUrl": ".",
     "paths": {
-      "@/*": ["src/*"],
-      "@utils": ["src/utils/index"],
-      "@validation": ["src/validation/index"],
-      "@constants": ["src/constants/index"]
+      "@/*": ["./src/*"],
+      "@utils": ["./src/utils/index"],
+      "@validation": ["./src/validation/index"],
+      "@constants": ["./src/constants/index"]
     }
   },
   "include": ["src"],
